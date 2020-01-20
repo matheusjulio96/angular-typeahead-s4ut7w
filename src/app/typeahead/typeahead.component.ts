@@ -30,12 +30,40 @@ export class TypeaheadComponent implements OnInit {
   itemTemplate: TemplateRef<any>;
 
   _isSelected = false;
-  lostFocusOne = false;
+  _lostFocusOne = false;
+  dirty = false;
 
   mouseOverDropmenu = false;
   active_id = -1;
   lastInputedValue;
   _isOpen = false;
+  classValidation = "";
+  classMostrar = "";
+
+  get lostFocusOne() {
+    return this._lostFocusOne;
+  }
+  set lostFocusOne(value) {
+    if(this.dirty){
+      this._lostFocusOne = value;
+    }
+    this.inputClassValidation();
+  }
+  get isSelected() {
+    return this._isSelected;
+  }
+  set isSelected(value) {
+    this._isSelected = value;
+    this.inputClassValidation();
+  }
+
+  get isOpen() {
+    return this._isOpen;
+  }
+  set isOpen(value) {
+    this._isOpen = value;
+    this.mostrar();
+  }
 
   items = [];
   @ContentChildren("hello") templates;
@@ -53,10 +81,9 @@ export class TypeaheadComponent implements OnInit {
   }
 
   valido() {
-    return this._isSelected || !this.lostFocusOne;
+    return this.isSelected || !this.lostFocusOne;
   }
 
-  LostFocusOne = false;
   classValidationValue() {
     return this.valido()
       ? "valid modified feedback-icon"
@@ -65,11 +92,11 @@ export class TypeaheadComponent implements OnInit {
 
   inputClassValidation() {
     //console.log('validation'); // <<< ===== ARRUMAR
-    return this.lostFocusOne ? ` ${this.classValidationValue()}` : "";
+    this.classValidation = (this.lostFocusOne && this.dirty) ? ` ${this.classValidationValue()}` : "";
   }
 
   mostrar() {
-    return this._isOpen ? " show" : "";
+    this.classMostrar = this.isOpen ? " show" : "";
   }
 
   onMouseOverDropmenu() {
@@ -83,22 +110,22 @@ export class TypeaheadComponent implements OnInit {
     this.lostFocusOne = true;
 
     if (!this.mouseOverDropmenu) {
-      this._isOpen = false;
+      this.isOpen = false;
     }
 
     this.clearLostFocus();
   }
 
   onFocusIn() {
-    if (this.items.length > 0 && !this._isSelected) {
-      this._isOpen = true;
+    if (this.items.length > 0 && !this.isSelected) {
+      this.isOpen = true;
     } else {
-      this._isOpen = false;
+      this.isOpen = false;
     }
   }
 
   clearLostFocus(){
-    if (!this._isSelected) {
+    if (!this.isSelected) {
       this._selectedText = this.lastInputedValue;
       if (this.active_id != -1) {
         this.items[this.active_id].item2 = false;
@@ -116,7 +143,7 @@ export class TypeaheadComponent implements OnInit {
     }
 
     if ((keyValue == "Tab" && ev.shiftKey) || keyValue == "Escape") {
-      this._isOpen = false;
+      this.isOpen = false;
       this.clearLostFocus();
       return;
     }
@@ -131,7 +158,7 @@ export class TypeaheadComponent implements OnInit {
     if (
       keyValue == "Tab" &&
       !ev.shiftKey &&
-      this._isOpen &&
+      this.isOpen &&
       this.items.length > 0
     ) {
       ev.preventDefault();
@@ -143,7 +170,7 @@ export class TypeaheadComponent implements OnInit {
     } else {
       if (keyValue == "ArrowUp" || keyValue == "ArrowDown") {
         ev.preventDefault();
-        if (this._isOpen) {
+        if (this.isOpen) {
           this.keyCheck(keyValue);
         }
       }
@@ -188,19 +215,21 @@ export class TypeaheadComponent implements OnInit {
     return this._selectedText;
   }
   set selectedText(value) {
+    this.dirty = true;
     this._selectedText = value;
     this.lastInputedValue = this._selectedText;
     this.active_id = -1;
-    if (this._isSelected) {
+    if (this.isSelected) {
       this.onRemoveSelectedItem.emit();
     }
-    this._isSelected = false;
+    this.isSelected = false;    
+    this.inputClassValidation();
 
     if (this._selectedText.trim().length > 0) {
       this.throttle();
     } else {
       this.clearItems();
-      this._isOpen = false;
+      this.isOpen = false;
     }
   }
 
@@ -219,8 +248,8 @@ export class TypeaheadComponent implements OnInit {
       return { item1: i, item2: false };
     });
 
-    if (!this._isSelected) {
-      this._isOpen = this.items.length > 0;
+    if (!this.isSelected) {
+      this.isOpen = this.items.length > 0;
     }
   }
 
@@ -229,9 +258,9 @@ export class TypeaheadComponent implements OnInit {
   }
 
   trySelect(item) {
-    this._isOpen = false;
-    this._selectedText = this.getObjValueField(item); // aqui seria o toString
-    this._isSelected = true;
+    this.isOpen = false;
+    this._selectedText = this.getObjValueField(item);
+    this.isSelected = true;
 
     this.onSelectionMade.emit(item);
     this.clearItems();
