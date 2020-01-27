@@ -149,7 +149,7 @@ export class TypeaheadComponent implements OnInit {
     }
 
     if (keyValue == "Enter") {
-      if (this.active_id != -1) {
+      if (this.active_id != -1 && !this.isSelected) {
         this.trySelect(this.items[this.active_id].item1);
       }
       return;
@@ -162,7 +162,7 @@ export class TypeaheadComponent implements OnInit {
       this.items.length > 0
     ) {
       ev.preventDefault();
-      if (this.active_id != -1) {
+      if (this.active_id != -1 && !this.isSelected) {
         this.trySelect(this.items[this.active_id].item1);
       } else {
         this.trySelect(this.items[0].item1);
