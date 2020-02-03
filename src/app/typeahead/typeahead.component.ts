@@ -132,9 +132,9 @@ export class TypeaheadComponent implements OnInit {
         this.items[this.active_id].item2 = false;
       }
       this.active_id = -1;
-    }
-    
-    if (this.forceSelection) this.selectedText = '';
+      
+      if (this.forceSelection) this.selectedText = '';
+    }    
   }
 
   onKeyDownInput(ev: KeyboardEvent) {
