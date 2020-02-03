@@ -23,6 +23,7 @@ export class TypeaheadComponent implements OnInit {
   @Input() style: string;
   @Input() selectedValue: string;
   @Input() valueField: string;
+  @Input() forceSelection: boolean;
 
   @Output() onSelectionMade: EventEmitter<any> = new EventEmitter();
   @Output() onRemoveSelectedItem: EventEmitter<any> = new EventEmitter();
@@ -132,6 +133,8 @@ export class TypeaheadComponent implements OnInit {
       }
       this.active_id = -1;
     }
+    
+    if (this.forceSelection) this.selectedText = '';
   }
 
   onKeyDownInput(ev: KeyboardEvent) {
