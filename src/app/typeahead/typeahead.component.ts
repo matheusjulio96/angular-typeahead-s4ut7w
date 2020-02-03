@@ -66,7 +66,7 @@ export class TypeaheadComponent implements OnInit {
   }
 
   items = [];
-  @ContentChildren("hello") templates;
+  @ContentChildren(TemplateRef) templates;
 
   @ViewChild("input", { static: true }) input;
 
@@ -77,7 +77,7 @@ export class TypeaheadComponent implements OnInit {
   ngAfterViewInit() {}
 
   ngAfterContentInit() {
-    this.templates.forEach(t => (this.itemTemplate = t));
+    this.itemTemplate = this.templates.first;
   }
 
   valido() {

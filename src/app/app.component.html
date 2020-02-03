@@ -6,7 +6,7 @@
 <input placeholder="input for focus test">
 
 <app-typeahead valueField="name" [getHintItems]="getHintObj" (onSelectionMade)="onSelectionMade($event)" (onRemoveSelectedItem)="onRemoveSelectedItem()" inputClass="form-control">
-  <ng-template #hello let-value >
+  <ng-template let-value >
     <span style="font-size:18px">{{value.name}}</span>
   </ng-template>
 </app-typeahead>
