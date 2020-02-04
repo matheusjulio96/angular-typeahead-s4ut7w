@@ -128,9 +128,6 @@ export class TypeaheadComponent implements OnInit {
   clearLostFocus(){
     if (!this.isSelected) {
       this._selectedText = this.lastInputedValue;
-      if (this.active_id != -1) {
-        this.items[this.active_id].item2 = false;
-      }
       this.active_id = -1;
       
       if (this.forceSelection) this.selectedText = '';
@@ -153,7 +150,7 @@ export class TypeaheadComponent implements OnInit {
 
     if (keyValue == "Enter") {
       if (this.active_id != -1 && !this.isSelected) {
-        this.trySelect(this.items[this.active_id].item1);
+        this.trySelect(this.items[this.active_id]);
       }
       return;
     }
@@ -166,9 +163,9 @@ export class TypeaheadComponent implements OnInit {
     ) {
       ev.preventDefault();
       if (this.active_id != -1 && !this.isSelected) {
-        this.trySelect(this.items[this.active_id].item1);
+        this.trySelect(this.items[this.active_id]);
       } else {
-        this.trySelect(this.items[0].item1);
+        this.trySelect(this.items[0]);
       }
     } else {
       if (keyValue == "ArrowUp" || keyValue == "ArrowDown") {
@@ -183,9 +180,6 @@ export class TypeaheadComponent implements OnInit {
   keyCheck(key) {
     const count = this.items.length;
 
-    if (this.active_id != -1) {
-      this.items[this.active_id].item2 = false;
-    }
     switch (key) {
       case "ArrowDown":
         this.active_id++;
@@ -202,9 +196,8 @@ export class TypeaheadComponent implements OnInit {
     if (this.active_id >= count) this.active_id = -1;
 
     if (this.active_id >= 0 && this.active_id <= count) {
-      this.items[this.active_id].item2 = true;
       this._selectedText = this.getObjValueField(
-        this.items[this.active_id].item1
+        this.items[this.active_id]
       );
     }
 
@@ -247,9 +240,7 @@ export class TypeaheadComponent implements OnInit {
   tryAutoComplete() {
     let items = this.getHintItems(this._selectedText);
 
-    this.items = items.map(i => {
-      return { item1: i, item2: false };
-    });
+    this.items = items;
 
     if (!this.isSelected) {
       this.isOpen = this.items.length > 0;

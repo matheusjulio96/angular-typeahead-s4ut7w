@@ -11,10 +11,10 @@ typeahead works!
     <div class="dropdown-menu dropdown-menu-right scrollable-menu{{classMostrar}}" style="width: 100%; max-height: 30vh; overflow-y: auto;" (mouseover)="onMouseOverDropmenu()" (mouseout)="onMouseOutDropmenu()">
       
         <div  *ngFor="let item of items; let idx = index"  
-        (click)="trySelectClick(item.item1)"
-        class="dropdown-item typeahead-item{{(item.item2)?' typeahead-item-selected':''}}">
+        (click)="trySelectClick(item)"
+        class="dropdown-item typeahead-item{{(active_id == idx)?' typeahead-item-selected':''}}">
        <!-- <span *ngIf="!itemTemplate">{{item.item.name}}</span>  -->
-      <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item.item1, index: idx}"></ng-container>
+      <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item, index: idx}"></ng-container>
     </div>
       
     </div>
